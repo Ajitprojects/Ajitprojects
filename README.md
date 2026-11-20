@@ -6,6 +6,8 @@ I’m an IT professional who likes to find out how things work by building somet
 
 | Area | Project | What it does |
 | --- | --- | --- |
+| Android TV | [CleanYourTV](projects/cleanyourtv) | A custom TV home screen with remote navigation and a scroll-responsive night scene. |
+| Creative tools | [AnimeStudio](projects/animestudio) | A Hindi animation project that uses speech timing to drive character mouths and scene duration. |
 | AI workflows | [Evidence to Prompt](https://github.com/Ajitprojects/Ajitprojects/tree/main/labs/evidence-to-prompt) | Turns case notes into a prompt for an AI assistant, with a worked example showing how to check the answer against the evidence. |
 | Web applications | [Incident Operations Dashboard](https://github.com/Ajitprojects/incident-operations-dashboard) | Lets you explore four fictional incidents and see how a status filter changes detection and recovery averages. |
 | Mobile applications | [PCPriceTracker](https://github.com/Ajitprojects/PCPriceTracker) | Brings PC component price history into a React Native app backed by Supabase. |
