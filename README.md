@@ -13,7 +13,7 @@ I use AI as a collaborator to explore ideas, learn unfamiliar technologies and h
 | Project | What it explores | Status |
 | :--- | :--- | :--- |
 | [PCPriceTracker](https://github.com/Ajitprojects/PCPriceTracker) | A personal price tracker project | Available |
-| Incident Operations Dashboard | Incident timelines and metrics using fictional data | Prototype built; publication pending |
+| [Incident Operations Dashboard](https://github.com/Ajitprojects/incident-operations-dashboard) | Incident timelines and metrics using fictional data | Available |
 
 ## Areas I explore
 
