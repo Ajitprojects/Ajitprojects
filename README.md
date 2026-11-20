@@ -2,16 +2,21 @@
 
 ![Animated workbench showing local AI, Android and creative tools](assets/workbench.svg)
 
-I’m an IT professional who likes to find out how things work by building something I can try. Lately that’s meant customising an Android TV launcher for my remote, experimenting with Hindi text-to-speech on my PC, and using AI to help prototype and troubleshoot small tools.
+I build software for the devices I use. Two questions behind my projects are why my tablet returns to Xiaomi Home when I press Home, and how to keep a line of Hindi dialogue from getting cut short in an animation.
 
 ## Selected projects
 
-| Project | What you can explore |
+| Project | What I tried and what I learned |
 | --- | --- |
-| [Local AI & Search Lab](https://github.com/Ajitprojects/Ajitprojects/tree/main/projects/local-ai-search) | **Lab notes.** I ran Qwen3 8B on my Windows PC and tested a self-hosted search endpoint. The notes explain how I would check whether a chat answer actually used a retrieved source. |
-| [CleanYourTV Home](https://github.com/Ajitprojects/Ajitprojects/tree/main/projects/cleanyourtv) | **Android TV case study.** How the home screen makes room for apps as you scroll with the remote, with a Java excerpt from the performance patch. |
-| [CleanYourTab Home](https://github.com/Ajitprojects/Ajitprojects/tree/main/projects/cleanyourtab) | **Android source.** Explore two launcher versions and the Xiaomi Pad 7 test that revealed why opening a launcher and pressing Home can lead to different screens. |
-| [AnimeStudio](https://github.com/Ajitprojects/Ajitprojects/tree/main/projects/animestudio) | **Animation walkthrough.** How a Hindi animation uses the audio timeline to choose a mouth shape and leave enough frames for the speaker to finish. |
-| [Evidence to Prompt](https://github.com/Ajitprojects/Ajitprojects/tree/main/labs/evidence-to-prompt) | **Browser tool.** Turn case notes into a prompt, then check an AI-generated summary for claims the evidence supports. |
-| [Incident Operations Dashboard](https://github.com/Ajitprojects/incident-operations-dashboard) | **Browser demo.** Filter four fictional incidents and reproduce the detection and recovery averages. |
-| [PCPriceTracker](https://github.com/Ajitprojects/PCPriceTracker) | **Mobile app source.** Follow a PC component price from a retailer collection script to a React Native price-history chart. |
+| [CleanYourTab Home](projects/cleanyourtab) | I built and opened a launcher on my Xiaomi Pad 7. Pressing Home still returned me to Xiaomi Home. The case study includes the device test and the [original](projects/cleanyourtab/v1) and [experimental](projects/cleanyourtab/v2) Android sources. |
+| [Local AI & Search Lab](projects/local-ai-search) | I ran Qwen3 8B with Ollama on my Windows PC and queried SearXNG separately. My next test is to trace a chat answer back to a search result. |
+| [AnimeStudio](projects/animestudio) | A walkthrough of how Hindi dialogue drives a character’s mouth shapes. A worked example shows why a scene with 2.1 seconds of speech needs 78 frames when it opens with a 15-frame pause at 30 fps. |
+
+## More to explore
+
+- **[CleanYourTV Home](projects/cleanyourtv)** — I tested scrolling through apps with a TV remote. The case study includes the Java code that coordinates the dashboard and animated background.
+- **[Evidence to Prompt](labs/evidence-to-prompt)** — Try the fictional case, build a prompt, and check an AI-written incident summary against the timestamps. The worked example shows how a timeout can become an unsupported claim about the cause.
+- **[Incident Operations Dashboard](https://github.com/Ajitprojects/incident-operations-dashboard)** — Filter four fictional incidents and see why an open incident counts toward average detection time while its recovery time is still unknown.
+- **[PCPriceTracker](https://github.com/Ajitprojects/PCPriceTracker)** — Follow a PC component listing from a Node.js collection script through Supabase to a React Native price-history chart.
+
+I use AI to help prototype and troubleshoot. In the tablet project, for example, I chose the layout and tested it on hardware. AI helped write the Java launcher and PowerShell scripts, then revise the design after that first test.
