@@ -1,39 +1,27 @@
-# Hi, I'm Ajit 👋
+# Hi, I’m Ajit
 
-### Building practical tools · Exploring AI · Learning through experimentation
-
-I'm a technology enthusiast who enjoys exploring new ideas, solving real-world problems and turning experiments into useful projects. My interests span AI-assisted workflows, applications, automation, system monitoring and troubleshooting.
-
-I use AI as a collaborator to explore ideas, learn unfamiliar technologies and help build and document projects—then review and test the results as I learn.
-
----
+I like building tools for questions I run into myself. When I’m comparing PC parts, I want to know whether today’s price is actually a good deal. When I’m trying an AI tool, I want to see which parts of its answer I can check.
 
 ## Featured work
 
-| Project | What it explores | Status |
-| :--- | :--- | :--- |
-| [PCPriceTracker](https://github.com/Ajitprojects/PCPriceTracker) | A personal price tracker project | Available |
-| [Incident Operations Dashboard](https://github.com/Ajitprojects/incident-operations-dashboard) | Incident timelines and metrics using fictional data | Available |
+| Project | What you can inspect |
+| --- | --- |
+| **[PCPriceTracker](https://github.com/Ajitprojects/PCPriceTracker)** | An Expo and React Native app for Indian PC component listings. Follow a price from the [collection script](https://github.com/Ajitprojects/PCPriceTracker/blob/main/collectTrackedProducts.mjs) through Supabase to the app’s price-history chart. |
+| **[Evidence to Prompt](labs/evidence-to-prompt)** | A local prompt builder for fictional case notes. Try the example, use the prompt in an AI assistant, and check whether the answer invents a cause or customer impact. |
+| **[Incident Operations Dashboard](https://github.com/Ajitprojects/incident-operations-dashboard)** | A browser demo with four fictional incidents. Switch the filter to **Open** to see why detection time is measurable while recovery time is still unknown. |
 
-## Areas I explore
+## Inside PCPriceTracker
 
-| Area | Interests |
-| :--- | :--- |
-| **AI & experimentation** | AI-assisted learning, problem-solving, documentation and project development |
-| **Tools & automation** | Practical utilities, Python and PowerShell learning |
-| **Applications & platforms** | Android, Windows, APIs and personal projects |
-| **Observability & systems** | Datadog, Splunk, logs, service health and incident analysis |
+The project combines a TypeScript mobile app with JavaScript scripts for collecting retailer prices. This chart counts source files in the [inspected revision](https://github.com/Ajitprojects/PCPriceTracker/tree/055b3cb1577c53d50442b27dc9626519296212c1).
 
-## What I'm learning
+```mermaid
+pie showData
+    title PCPriceTracker source files by extension
+    ".mjs" : 15
+    ".ts" : 2
+    ".tsx" : 1
+```
 
-**Python** · **PowerShell** · **Linux** · **Networking** · **HTTP & APIs** · **AI-assisted workflows**
+## How I use AI
 
-## Ideas in progress
-
-- **Application Log Analysis Lab** — explore sample errors and request traces.
-- **Service Health Monitor** — check demo service availability and response times.
-- **AI-Assisted Investigation Lab** — experiment with summaries and analysis of fictional data.
-
----
-
-<sub>Stay curious · Experiment · Build · Learn · Improve</sub>
+I use AI to help prototype tools and write documentation. One exercise I like is to ask for an incident summary and check it sentence by sentence. A timeout in a log is an observation. Calling it the root cause takes more evidence. The [worked example](labs/evidence-to-prompt#a-claim-you-can-check) shows what that distinction looks like in practice.
