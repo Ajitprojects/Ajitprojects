@@ -1,44 +1,39 @@
 # Hi, I'm Ajit 👋
 
-### IT Operations & Application Support · AI-Assisted Problem Solving · Technology Enthusiast
+### Building practical tools · Exploring AI · Learning through experimentation
 
-I work in production operations, supporting application monitoring, incident response and service health. I enjoy exploring new technologies and using AI-assisted tools to learn, analyse problems and build practical solutions.
+I'm a technology enthusiast who enjoys exploring new ideas, solving real-world problems and turning experiments into useful projects. My interests span AI-assisted workflows, applications, automation, system monitoring and troubleshooting.
 
-My interests include observability, application troubleshooting, automation, AI and experimenting with new platforms and devices. I'm developing my technical skills through hands-on projects as I work towards an L2 support role.
+I use AI as a collaborator to explore ideas, learn unfamiliar technologies and help build and document projects—then review and test the results as I learn.
 
 ---
 
-## Operations toolkit
+## Featured work
 
-| Area | Experience |
-| :--- | :--- |
-| **Monitoring & observability** | Datadog, Splunk, alert investigation and service health checks |
-| **Incident response** | Initial triage, escalation, incident updates and timeline tracking |
-| **Operational reporting** | MTTD and MTTR reporting, post-release validation |
-| **Collaboration** | Jira, Confluence and Microsoft Teams |
-
-## How I use AI
-
-I use AI-assisted tools to explore technical concepts, help analyse problems, improve documentation and support personal projects. I review and verify the output, especially before using it in operational decisions.
-
-## Exploring & learning
-
-**Application troubleshooting** · **HTTP & APIs** · **Linux** · **Networking** · **Python** · **PowerShell** · **AI-assisted workflows** · **Android & Windows**
-
-## Projects
-
-| Project | Focus | Status |
+| Project | What it explores | Status |
 | :--- | :--- | :--- |
-| [PCPriceTracker](https://github.com/Ajitprojects/PCPriceTracker) | Personal price tracker project | Available |
-| Incident Operations Dashboard | Incident timelines, alerts and operational metrics using simulated data | Prototype built; publication pending |
-| Application Log Analysis Lab | Investigating sample errors and request traces | Planned |
-| Service Health Monitor | Checking demo service availability and response times | Planned |
-| AI-Assisted Incident Investigation Lab | Exploring AI-assisted summaries and investigation using fictional data | Planned |
+| [PCPriceTracker](https://github.com/Ajitprojects/PCPriceTracker) | A personal price tracker project | Available |
+| Incident Operations Dashboard | Incident timelines and metrics using fictional data | Prototype built; publication pending |
 
-## GitHub activity
+## Areas I explore
 
-My public contributions and projects are available on [my GitHub profile](https://github.com/Ajitprojects). I'm building this portfolio one practical project at a time.
+| Area | Interests |
+| :--- | :--- |
+| **AI & experimentation** | AI-assisted learning, problem-solving, documentation and project development |
+| **Tools & automation** | Practical utilities, Python and PowerShell learning |
+| **Applications & platforms** | Android, Windows, APIs and personal projects |
+| **Observability & systems** | Datadog, Splunk, logs, service health and incident analysis |
+
+## What I'm learning
+
+**Python** · **PowerShell** · **Linux** · **Networking** · **HTTP & APIs** · **AI-assisted workflows**
+
+## Ideas in progress
+
+- **Application Log Analysis Lab** — explore sample errors and request traces.
+- **Service Health Monitor** — check demo service availability and response times.
+- **AI-Assisted Investigation Lab** — experiment with summaries and analysis of fictional data.
 
 ---
 
-<sub>Observe · Investigate · Experiment · Learn · Improve</sub>
+<sub>Stay curious · Experiment · Build · Learn · Improve</sub>
