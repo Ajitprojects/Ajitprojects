@@ -46,7 +46,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-/** DotDeck: launchable app, HOME candidate, local widget host; does not modify Xiaomi Home. */
+/** CleanYourTab Home: launchable app, HOME candidate, local widget host; does not modify Xiaomi Home. */
 public class MainActivity extends Activity {
     private static final int BG=Color.rgb(8,11,16), WHITE=Color.rgb(240,244,248), MUTED=Color.rgb(160,170,182);
     private static final int ACCENT=Color.rgb(255,87,92), PANEL=Color.argb(219,24,30,39);
@@ -62,8 +62,6 @@ public class MainActivity extends Activity {
     private GridLayout appGrid;
     private TextView clockText, dateText, batteryText, appCount;
     private EditText appSearch;
-    private FrameLayout drawerOverlay;
-    private boolean drawerOpen=false;
     private int pendingWidgetId=-1;
     private boolean widgetListening=false;
     private final Runnable tick=new Runnable(){public void run(){updateClock();clockHandler.postDelayed(this,15000);}};
@@ -87,7 +85,7 @@ public class MainActivity extends Activity {
     @Override protected void onStart(){super.onStart();try{widgetHost.startListening();widgetListening=true;}catch(Exception ignored){} clockHandler.post(tick);}
     @Override protected void onStop(){clockHandler.removeCallbacks(tick);if(widgetListening){widgetHost.stopListening();widgetListening=false;} super.onStop();}
     @Override public void onConfigurationChanged(Configuration cfg){super.onConfigurationChanged(cfg);build();}
-    @Override public void onResume(){super.onResume();loadApps();if(appGridDrawer!=null)fillApps(appSearch==null?"":appSearch.getText().toString());if(appGrid!=null)fillHomeApps(); if(dockRow!=null)refreshDock();updateClock();}
+    @Override public void onResume(){super.onResume();loadApps();if(appGrid!=null)fillApps(appSearch==null?"":appSearch.getText().toString()); if(dockRow!=null)refreshDock();updateClock();}
 
     private void loadApps(){
         apps.clear(); PackageManager pm=getPackageManager();
@@ -113,137 +111,87 @@ public class MainActivity extends Activity {
 
     private void build(){
         boolean landscape=getResources().getConfiguration().orientation==Configuration.ORIENTATION_LANDSCAPE;
-        int pad=landscape?dp(36):dp(22);
-        FrameLayout base=new FrameLayout(this);
-        base.setBackgroundColor(BG);
+        int outerPad=landscape?24:16;
+        FrameLayout base=new FrameLayout(this);base.setBackgroundColor(BG);
         base.addView(new DotBackdrop(this),new FrameLayout.LayoutParams(-1,-1));
-        LinearLayout screen=col();screen.setPadding(pad,dp(22),pad,dp(18));
-        base.addView(screen,new FrameLayout.LayoutParams(-1,-1));
+        LinearLayout screen=new LinearLayout(this);screen.setOrientation(LinearLayout.VERTICAL);
+        screen.setPadding(dp(outerPad),dp(12),dp(outerPad),dp(12));
+        FrameLayout.LayoutParams screenParams=new FrameLayout.LayoutParams(-1,-1);
+        base.addView(screen,screenParams);
         base.setOnApplyWindowInsetsListener((v,insets)->{
             android.graphics.Insets bars=insets.getInsets(WindowInsets.Type.systemBars());
-            screen.setPadding(pad,dp(20)+bars.top,pad,dp(14)+bars.bottom);
-            if(drawerOverlay!=null)drawerOverlay.setPadding(pad,dp(24)+bars.top,pad,dp(24)+bars.bottom);
+            screen.setPadding(dp(outerPad),dp(12)+bars.top,dp(outerPad),dp(12)+bars.bottom);
             return insets;
         });
         setContentView(base);
 
-        LinearLayout toolbar=row();toolbar.setGravity(Gravity.CENTER_VERTICAL);
-        screen.addView(toolbar,new LinearLayout.LayoutParams(-1,dp(42)));
-        TextView brand=label("NOTHING / ELSE",12,WHITE,true);brand.setLetterSpacing(.20f);
-        toolbar.addView(brand,new LinearLayout.LayoutParams(0,-2,1));
-        TextView launcher=chip("HOME STATUS",WHITE);launcher.setOnClickListener(v->showHomeStatus());toolbar.addView(launcher);
-        TextView settings=chip("SETTINGS",MUTED);settings.setOnClickListener(v->openSettings());
-        LinearLayout.LayoutParams sp=new LinearLayout.LayoutParams(-2,-2);sp.leftMargin=dp(8);toolbar.addView(settings,sp);
+        LinearLayout header=row();header.setGravity(Gravity.CENTER_VERTICAL);
+        screen.addView(header,new LinearLayout.LayoutParams(-1,dp(46)));
+        TextView brand=label("C L E A N  /  Y O U R  /  T A B",12,WHITE,true);
+        header.addView(brand,new LinearLayout.LayoutParams(0,-2,1));
+        TextView home=chip("SET HOME",ACCENT);home.setOnClickListener(v->requestHome());header.addView(home);
+        TextView settings=chip("⚙",WHITE);settings.setOnClickListener(v->openSettings());
+        LinearLayout.LayoutParams sx=new LinearLayout.LayoutParams(-2,-2);sx.leftMargin=dp(8);header.addView(settings,sx);
 
-        LinearLayout middle=col();screen.addView(middle,new LinearLayout.LayoutParams(-1,0,1));
-        middle.setGravity(Gravity.CENTER_VERTICAL);
-        LinearLayout hero=landscape?row():col();middle.addView(hero,new LinearLayout.LayoutParams(-1,-2));
-        LinearLayout clockArea=col();clockArea.setPadding(dp(22),dp(18),dp(22),dp(18));
-        clockArea.setBackground(roundColor(Color.argb(135,21,25,33),28));
-        LinearLayout.LayoutParams clp=landscape?new LinearLayout.LayoutParams(0,dp(214),1.15f):new LinearLayout.LayoutParams(-1,dp(184));
-        hero.addView(clockArea,clp);
-        TextView tagline=label("YOUR SPACE  /  YOUR RULES",11,MUTED,true);tagline.setLetterSpacing(.12f);clockArea.addView(tagline);
-        clockText=label("00:00",landscape?75:60,WHITE,true);
-        clockText.setTypeface(Typeface.create("sans-serif-light",Typeface.NORMAL));
-        LinearLayout.LayoutParams tlp=new LinearLayout.LayoutParams(-1,-2);tlp.topMargin=dp(6);clockArea.addView(clockText,tlp);
-        dateText=label("",15,MUTED,false);clockArea.addView(dateText);
-        batteryText=label("",11,ACCENT,true);LinearLayout.LayoutParams bp=new LinearLayout.LayoutParams(-1,-2);bp.topMargin=dp(10);clockArea.addView(batteryText,bp);
+        ScrollView scroll=new ScrollView(this);scroll.setFillViewport(false);scroll.setVerticalScrollBarEnabled(false);
+        LinearLayout.LayoutParams slp=new LinearLayout.LayoutParams(-1,0,1);screen.addView(scroll,slp);
+        LinearLayout sections=col();sections.setPadding(0,dp(12),0,dp(14));scroll.addView(sections);
 
-        LinearLayout widgetArea=col();widgetArea.setBackground(roundColor(Color.argb(155,26,31,40),28));
-        widgetArea.setPadding(dp(18),dp(13),dp(18),dp(13));
-        LinearLayout.LayoutParams wp=landscape?new LinearLayout.LayoutParams(0,dp(214),.85f):new LinearLayout.LayoutParams(-1,dp(155));
-        if(landscape)wp.leftMargin=dp(16);else wp.topMargin=dp(12);hero.addView(widgetArea,wp);
-        LinearLayout widgetHeader=row();widgetHeader.setGravity(Gravity.CENTER_VERTICAL);widgetArea.addView(widgetHeader);
-        TextView wh=label("WIDGETS",12,WHITE,true);wh.setLetterSpacing(.14f);widgetHeader.addView(wh,new LinearLayout.LayoutParams(0,-2,1));
-        TextView add=chip("+ ADD",ACCENT);add.setOnClickListener(v->chooseWidget());widgetHeader.addView(add);
-        widgetSlot=new FrameLayout(this);LinearLayout.LayoutParams ws=new LinearLayout.LayoutParams(-1,0,1);ws.topMargin=dp(6);widgetArea.addView(widgetSlot,ws);renderWidget();
+        LinearLayout hero=landscape?row():col();
+        sections.addView(hero,new LinearLayout.LayoutParams(-1,-2));
+        LinearLayout clockCard=col();clockCard.setPadding(dp(22),dp(18),dp(22),dp(18));clockCard.setBackground(cardShape());
+        LinearLayout.LayoutParams ccp=landscape?new LinearLayout.LayoutParams(0,dp(210),1):new LinearLayout.LayoutParams(-1,dp(195));
+        hero.addView(clockCard,ccp);
+        TextView eyebrow=label("NOTHING TO DISTRACT. EVERYTHING TO DO.",10,MUTED,true);clockCard.addView(eyebrow);
+        clockText=label("00:00",landscape?62:56,WHITE,true);clockText.setTypeface(Typeface.create("sans-serif-light",Typeface.NORMAL));clockCard.addView(clockText);
+        dateText=label("",15,MUTED,false);clockCard.addView(dateText);
+        TextView quote=label("Make space for what matters  •",12,ACCENT,false);LinearLayout.LayoutParams qp=new LinearLayout.LayoutParams(-1,-2);qp.topMargin=dp(8);clockCard.addView(quote,qp);
 
-        LinearLayout rowTitle=row();rowTitle.setGravity(Gravity.CENTER_VERTICAL);
-        LinearLayout.LayoutParams rt=new LinearLayout.LayoutParams(-1,dp(48));rt.topMargin=dp(12);middle.addView(rowTitle,rt);
-        TextView appsTitle=label("FAVOURITES",12,WHITE,true);appsTitle.setLetterSpacing(.18f);
-        rowTitle.addView(appsTitle,new LinearLayout.LayoutParams(0,-2,1));
-        TextView openAll=chip("ALL APPS  ↑",WHITE);openAll.setOnClickListener(v->openDrawer());rowTitle.addView(openAll);
-        appGrid=new GridLayout(this);appGrid.setColumnCount(landscape?7:4);
-        middle.addView(appGrid,new LinearLayout.LayoutParams(-1,-2));fillHomeApps();
-        TextView hint=label("SWIPE UP FOR ALL APPS",10,MUTED,true);hint.setGravity(Gravity.CENTER);
-        hint.setLetterSpacing(.14f);
-        LinearLayout.LayoutParams hp=new LinearLayout.LayoutParams(-1,dp(45));middle.addView(hint,hp);
-        middle.setOnTouchListener(new View.OnTouchListener(){float y;public boolean onTouch(View v,android.view.MotionEvent e){
-            if(e.getAction()==android.view.MotionEvent.ACTION_DOWN){y=e.getY();return true;}
-            if(e.getAction()==android.view.MotionEvent.ACTION_UP){if(y-e.getY()>dp(55)){openDrawer();return true;}return false;}
-            return true;
-        }});
-        hint.setOnClickListener(v->openDrawer());
+        LinearLayout right=col();right.setPadding(dp(18),dp(16),dp(18),dp(12));right.setBackground(cardShape());
+        LinearLayout.LayoutParams rp=landscape?new LinearLayout.LayoutParams(0,dp(210),1):new LinearLayout.LayoutParams(-1,dp(160));
+        if(landscape)rp.leftMargin=dp(12);else rp.topMargin=dp(12);hero.addView(right,rp);
+        LinearLayout topline=row();topline.setGravity(Gravity.CENTER_VERTICAL);right.addView(topline);
+        TextView widgetHead=label("WIDGET SPACE",12,WHITE,true);topline.addView(widgetHead,new LinearLayout.LayoutParams(0,-2,1));
+        TextView add=chip("+ ADD",ACCENT);add.setOnClickListener(v->chooseWidget());topline.addView(add);
+        widgetSlot=new FrameLayout(this);
+        LinearLayout.LayoutParams wlp=new LinearLayout.LayoutParams(-1,0,1);wlp.topMargin=dp(10);right.addView(widgetSlot,wlp);
+        renderWidget();
 
-        LinearLayout dockHolder=row();dockHolder.setGravity(Gravity.CENTER);
-        LinearLayout.LayoutParams dh=new LinearLayout.LayoutParams(-1,dp(92));screen.addView(dockHolder,dh);
-        LinearLayout dockPanel=row();dockPanel.setGravity(Gravity.CENTER_VERTICAL);dockPanel.setPadding(dp(14),dp(8),dp(14),dp(8));
-        dockPanel.setBackground(roundColor(Color.argb(218,45,49,58),30));
-        LinearLayout.LayoutParams dpParams=new LinearLayout.LayoutParams(landscape?dp(680):-1,dp(78));dockHolder.addView(dockPanel,dpParams);
-        dockRow=row();dockRow.setGravity(Gravity.CENTER);
-        dockPanel.addView(dockRow,new LinearLayout.LayoutParams(0,-1,1));
-        View separator=new View(this);separator.setBackgroundColor(Color.argb(60,255,255,255));
-        LinearLayout.LayoutParams sep=new LinearLayout.LayoutParams(dp(1),dp(40));sep.leftMargin=dp(10);sep.rightMargin=dp(10);dockPanel.addView(separator,sep);
-        TextView drawer=chip("•••",WHITE);drawer.setTextSize(19);drawer.setOnClickListener(v->openDrawer());dockPanel.addView(drawer);
+        LinearLayout status=row();status.setGravity(Gravity.CENTER_VERTICAL);
+        LinearLayout.LayoutParams stp=new LinearLayout.LayoutParams(-1,dp(52));stp.topMargin=dp(10);sections.addView(status,stp);
+        batteryText=label("BATTERY · --",12,MUTED,true);status.addView(batteryText,new LinearLayout.LayoutParams(0,-2,1));
+        appCount=label("",12,MUTED,true);status.addView(appCount);
+
+        LinearLayout searchWrap=col();searchWrap.setPadding(dp(16),dp(1),dp(16),dp(1));searchWrap.setBackground(cardShape());
+        sections.addView(searchWrap,new LinearLayout.LayoutParams(-1,dp(52)));
+        appSearch=new EditText(this);appSearch.setSingleLine(true);appSearch.setTextColor(WHITE);appSearch.setHintTextColor(MUTED);appSearch.setTextSize(14);
+        appSearch.setHint("⌕  Search installed apps");appSearch.setBackgroundColor(Color.TRANSPARENT);
+        searchWrap.addView(appSearch,new LinearLayout.LayoutParams(-1,-1));
+        appSearch.addTextChangedListener(new TextWatcher(){public void beforeTextChanged(CharSequence s,int st,int c,int a){} public void onTextChanged(CharSequence s,int start,int before,int count){fillApps(s.toString());}public void afterTextChanged(Editable e){} });
+
+        TextView appsHead=label("YOUR SPACE  /  APPS",12,WHITE,true);
+        LinearLayout.LayoutParams ahp=new LinearLayout.LayoutParams(-1,-2);ahp.topMargin=dp(17);ahp.bottomMargin=dp(10);sections.addView(appsHead,ahp);
+        appGrid=new GridLayout(this);appGrid.setColumnCount(landscape?8:5);appGrid.setAlignmentMode(GridLayout.ALIGN_BOUNDS);
+        sections.addView(appGrid,new LinearLayout.LayoutParams(-1,-2));fillApps("");
+
+        LinearLayout dockCard=row();dockCard.setGravity(Gravity.CENTER);dockCard.setPadding(dp(10),dp(7),dp(10),dp(7));
+        dockCard.setBackground(roundColor(Color.argb(244,36,43,53),30));
+        LinearLayout.LayoutParams dp0=new LinearLayout.LayoutParams(-1,dp(88));dp0.topMargin=dp(8);screen.addView(dockCard,dp0);
+        TextView dot=label("●",18,ACCENT,true);dot.setGravity(Gravity.CENTER);dockCard.addView(dot,new LinearLayout.LayoutParams(dp(34),-1));
+        dockRow=row();dockRow.setGravity(Gravity.CENTER);dockCard.addView(dockRow,new LinearLayout.LayoutParams(0,-1,1));
+        TextView edit=chip("EDIT",WHITE);edit.setOnClickListener(v->new AlertDialog.Builder(this).setTitle("Floating dock")
+           .setMessage("Long-press any app to pin or unpin it from the dock (maximum 7 apps).")
+           .setPositiveButton("OK",null).show());dockCard.addView(edit);
         refreshDock();updateClock();
-
-        drawerOverlay=new FrameLayout(this);drawerOverlay.setBackgroundColor(Color.argb(250,10,13,20));
-        drawerOverlay.setVisibility(View.GONE);drawerOverlay.setClickable(true);
-        drawerOverlay.setPadding(pad,dp(22),pad,dp(16));
-        base.addView(drawerOverlay,new FrameLayout.LayoutParams(-1,-1));
-        LinearLayout drawerContent=col();drawerOverlay.addView(drawerContent,new FrameLayout.LayoutParams(-1,-1));
-        LinearLayout drawerHead=row();drawerHead.setGravity(Gravity.CENTER_VERTICAL);drawerContent.addView(drawerHead,new LinearLayout.LayoutParams(-1,dp(57)));
-        TextView dtitle=label("ALL APPS",24,WHITE,true);dtitle.setLetterSpacing(.08f);drawerHead.addView(dtitle,new LinearLayout.LayoutParams(0,-2,1));
-        TextView close=chip("✕ CLOSE",WHITE);close.setOnClickListener(v->closeDrawer());drawerHead.addView(close);
-        appSearch=new EditText(this);appSearch.setSingleLine(true);appSearch.setTextColor(WHITE);appSearch.setHintTextColor(MUTED);
-        appSearch.setTextSize(17);appSearch.setHint("Search apps");appSearch.setPadding(dp(18),0,dp(18),0);
-        appSearch.setBackground(roundColor(Color.argb(220,38,43,53),19));
-        LinearLayout.LayoutParams searchLp=new LinearLayout.LayoutParams(-1,dp(56));searchLp.topMargin=dp(12);drawerContent.addView(appSearch,searchLp);
-        ScrollView appScroll=new ScrollView(this);appScroll.setFillViewport(false);appScroll.setVerticalScrollBarEnabled(false);
-        LinearLayout.LayoutParams as=new LinearLayout.LayoutParams(-1,0,1);as.topMargin=dp(14);drawerContent.addView(appScroll,as);
-        appGridDrawer=new GridLayout(this);appGridDrawer.setColumnCount(landscape?8:5);appScroll.addView(appGridDrawer);
-        appCount=label("",11,MUTED,true);drawerContent.addView(appCount,new LinearLayout.LayoutParams(-1,dp(20)));
-        appSearch.addTextChangedListener(new TextWatcher(){public void beforeTextChanged(CharSequence s,int st,int c,int a){}public void onTextChanged(CharSequence s,int start,int before,int count){fillApps(s.toString());}public void afterTextChanged(Editable e){}});
-        fillApps("");
-        drawerOverlay.setOnTouchListener(new View.OnTouchListener(){float y;public boolean onTouch(View v,android.view.MotionEvent e){
-            if(e.getAction()==android.view.MotionEvent.ACTION_DOWN){y=e.getY();return true;}
-            if(e.getAction()==android.view.MotionEvent.ACTION_UP && e.getY()-y>dp(100)){closeDrawer();return true;}
-            return true;
-        }});
-        if(drawerOpen)openDrawer();
-    }
-    private GridLayout appGridDrawer;
-    private void openDrawer(){drawerOpen=true;if(drawerOverlay!=null){drawerOverlay.setVisibility(View.VISIBLE);drawerOverlay.setAlpha(0f);drawerOverlay.animate().alpha(1f).setDuration(190).start();}}
-    private void closeDrawer(){drawerOpen=false;if(drawerOverlay!=null){drawerOverlay.setVisibility(View.GONE);if(appSearch!=null){appSearch.setText("");appSearch.clearFocus();}}}
-    @Override public void onBackPressed(){if(drawerOpen){closeDrawer();return;}super.onBackPressed();}
-    private void fillHomeApps(){
-        if(appGrid==null)return;appGrid.removeAllViews();
-        int cols=appGrid.getColumnCount(),max=cols*2;
-        List<AppItem> favorites=new ArrayList<>();
-        for(String id:dockIds){for(AppItem a:apps){if(a.id.equals(id)&&!favorites.contains(a)){favorites.add(a);break;}}}
-        for(AppItem a:apps){if(favorites.size()>=max)break;if(!favorites.contains(a))favorites.add(a);}
-        for(int i=0;i<Math.min(max,favorites.size());i++){
-            FrameLayout tile=appTile(favorites.get(i),false);
-            GridLayout.LayoutParams gp=new GridLayout.LayoutParams(GridLayout.spec(i/cols),GridLayout.spec(i%cols,1f));
-            gp.width=0;gp.height=dp(100);gp.setGravity(Gravity.FILL_HORIZONTAL);gp.setMargins(dp(5),dp(5),dp(5),dp(5));appGrid.addView(tile,gp);
-        }
-    }
-    private void showHomeStatus(){
-        RoleManager rm=(RoleManager)getSystemService(Context.ROLE_SERVICE);
-        boolean held=rm!=null&&rm.isRoleAvailable(RoleManager.ROLE_HOME)&&rm.isRoleHeld(RoleManager.ROLE_HOME);
-        new AlertDialog.Builder(this).setTitle(held?"DotDeck is Home":"Xiaomi Home is still active")
-          .setMessage(held?"Home is set to DotDeck. Xiaomi Home remains installed as fallback.":"Test this launcher first. Then request to set it as Home. HyperOS may refuse third-party launchers or disable gesture navigation.")
-          .setPositiveButton(held?"OK":"REQUEST HOME",(d,w)->{if(!held)requestHome();})
-          .setNegativeButton("Cancel",null).show();
     }
     private void fillApps(String filter){
-        if(appGridDrawer==null)return;appGridDrawer.removeAllViews();String q=filter.trim().toLowerCase(Locale.ROOT);
-        int count=0, cols=appGridDrawer.getColumnCount();
+        if(appGrid==null)return;appGrid.removeAllViews();String q=filter.trim().toLowerCase(Locale.ROOT);
+        int count=0, cols=appGrid.getColumnCount();
         for(AppItem app:apps){if(!app.label.toLowerCase(Locale.ROOT).contains(q))continue;
             FrameLayout tile=appTile(app,false);
             GridLayout.LayoutParams gp=new GridLayout.LayoutParams(GridLayout.spec(count/cols),GridLayout.spec(count%cols,1f));
             gp.width=0;gp.height=dp(100);gp.setGravity(Gravity.FILL_HORIZONTAL);gp.setMargins(dp(2),dp(3),dp(2),dp(3));
-            appGridDrawer.addView(tile,gp);count++;
+            appGrid.addView(tile,gp);count++;
         }
         if(appCount!=null)appCount.setText(count+" APPS");
     }
@@ -257,7 +205,7 @@ public class MainActivity extends Activity {
             LinearLayout.LayoutParams np=new LinearLayout.LayoutParams(-1,-2);np.topMargin=dp(8);body.addView(name,np);}
         tile.setOnClickListener(v->{try{Intent i=new Intent(Intent.ACTION_MAIN);i.addCategory(Intent.CATEGORY_LAUNCHER);i.setComponent(app.component);i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);startActivity(i);}catch(Exception ex){Toast.makeText(this,"App unavailable",Toast.LENGTH_SHORT).show();}});
         tile.setOnLongClickListener(v->{if(dockIds.contains(app.id))dockIds.remove(app.id);else if(dockIds.size()<7)dockIds.add(app.id);else {Toast.makeText(this,"Dock allows up to 7 apps",Toast.LENGTH_SHORT).show();return true;}
-            persistDock();refreshDock();fillHomeApps();Toast.makeText(this,"Dock updated",Toast.LENGTH_SHORT).show();return true;});
+            persistDock();refreshDock();Toast.makeText(this,"Dock updated",Toast.LENGTH_SHORT).show();return true;});
         return tile;
     }
     private void refreshDock(){
@@ -281,11 +229,11 @@ public class MainActivity extends Activity {
     private void requestHome(){
         RoleManager rm=(RoleManager)getSystemService(Context.ROLE_SERVICE);
         if(rm!=null&&rm.isRoleAvailable(RoleManager.ROLE_HOME)){
-            if(rm.isRoleHeld(RoleManager.ROLE_HOME)){Toast.makeText(this,"DotDeck is already Home",Toast.LENGTH_SHORT).show();return;}
+            if(rm.isRoleHeld(RoleManager.ROLE_HOME)){Toast.makeText(this,"CleanYourTab Home is already Home",Toast.LENGTH_SHORT).show();return;}
             try{startActivityForResult(rm.createRequestRoleIntent(RoleManager.ROLE_HOME),REQ_HOME);return;}catch(Exception ignored){}
         }
         try{startActivity(new Intent(Settings.ACTION_HOME_SETTINGS));}
-        catch(Exception ex){new AlertDialog.Builder(this).setMessage("HyperOS did not expose a Home app chooser. Keep Xiaomi Home unchanged and run DotDeck as a normal app.").setPositiveButton("OK",null).show();}
+        catch(Exception ex){new AlertDialog.Builder(this).setMessage("HyperOS did not expose a Home app chooser. Keep Xiaomi Home unchanged and run CleanYourTab Home as a normal app.").setPositiveButton("OK",null).show();}
     }
     private void chooseWidget(){
         List<AppWidgetProviderInfo> providers=widgetManager.getInstalledProviders();

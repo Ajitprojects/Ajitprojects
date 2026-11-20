@@ -1,4 +1,4 @@
-# CleanYourTV
+# CleanYourTV Home
 
 A custom Android TV home screen written in Java. The app grid, dashboard and animated night scene share a screen intended for a TV remote.
 
@@ -24,3 +24,7 @@ final Runnable syncLowerGridScene = () -> {
 ```
 
 This portfolio page documents the saved implementation. Device frame-time measurements and a distributable launcher build are outside this snapshot.
+
+## Recovered project files
+
+The original launcher archive contains the Gradle project and Java activity. The scroll-cleanup archive contains PowerShell scripts for applying and installing the change. The separate performance patch includes revised Java sources for the activity and animated background. The public name refers to the same launcher originally tested as CleanYourTV.
