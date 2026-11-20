@@ -1,5 +1,7 @@
 # Hi, I’m Ajit
 
+![Animated workbench showing local AI, Android and creative tools](assets/workbench.svg)
+
 I’m an IT professional who likes to find out how things work by building something I can try. Lately that’s meant customising an Android TV launcher for my remote, experimenting with Hindi text-to-speech on my PC, and using AI to help prototype and troubleshoot small tools.
 
 ## Selected projects

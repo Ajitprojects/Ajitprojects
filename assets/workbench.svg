@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="112" viewBox="0 0 840 112" role="img" aria-labelledby="title">
+<title id="title">Ajit’s workbench: local AI, Android and creative tools</title>
+<defs><linearGradient id="bg"><stop stop-color="#17192f"/><stop offset="1" stop-color="#252041"/></linearGradient></defs>
+<style>
+.label{font:600 21px system-ui,sans-serif;fill:#f4f1ff}
+.wave{transform-box:fill-box;transform-origin:center;animation:beat 2.8s ease-in-out infinite alternate}
+@keyframes beat{to{transform:scaleY(.42)}}
+.focus{animation:slide 5s ease-in-out infinite}
+@keyframes slide{0%,24%,100%{transform:translateX(0)}50%,74%{transform:translateX(15px)}}
+.frame{animation:ink 3s ease-in-out infinite alternate}
+@keyframes ink{to{stroke-dashoffset:0}}
+@media(prefers-reduced-motion:reduce){.wave,.focus,.frame{animation:none}}
+</style>
+<rect width="840" height="112" rx="14" fill="url(#bg)"/>
+<path d="M268 28v56m267-56v56" stroke="#4b4463"/>
+<g fill="#ad9cff"><rect class="wave" style="animation-delay:-0s" x="36" y="48" width="5" height="16" rx="2.5"/><rect class="wave" style="animation-delay:-0.43s" x="45" y="39" width="5" height="34" rx="2.5"/><rect class="wave" style="animation-delay:-0.86s" x="54" y="31" width="5" height="50" rx="2.5"/><rect class="wave" style="animation-delay:-1.29s" x="63" y="41" width="5" height="30" rx="2.5"/><rect class="wave" style="animation-delay:-1.72s" x="72" y="47" width="5" height="18" rx="2.5"/></g>
+<text x="102" y="64" class="label">Local AI</text>
+<g stroke="#89ddcf" fill="none" stroke-width="2.5"><rect x="298" y="36" width="54" height="40" rx="6"/><path d="M307 46h24"/><rect class="focus" x="307" y="54" width="12" height="11" rx="2" fill="#89ddcf"/></g>
+<text x="374" y="64" class="label">Android</text>
+<g fill="none" stroke="#ffc991" stroke-width="2.5"><rect x="562" y="37" width="53" height="38" rx="4"/><path d="M568 67l12-12 9 6 17-17" stroke-opacity=".35"/><path class="frame" d="M568 67l12-12 9 6 17-17" stroke-dasharray="55" stroke-dashoffset="43"/></g>
+<text x="633" y="64" class="label">Creative tools</text></svg>
